@@ -20,6 +20,10 @@ function App() {
   const [diceNumber, setDiceNumber] = useState(0);
 
   const handleHold = () => {
+    if (isTerminado()) {
+      return;
+    }
+
     // para cambiar el score, se debe definir una nueva variable
     // no modificamos el array, creamos uno nuevo!!!!
     const newScore = [...score];
@@ -34,21 +38,34 @@ function App() {
     setScore([0, 0]);
     setCurrent(0);
     setDiceNumber(0);
+    document.querySelector(".btn--hold").disabled = false;
+    document.querySelector(".btn--roll").disabled = false;
   };
 
   const handleRollDice = () => {
-    
-    // const randomNumber = Math.floor(Math.random() * 6) + 1
-    // setDiceNumber(randomNumber)
-    setDiceNumber(Math.floor(Math.random() * 6) + 1);
+    if (isTerminado()) {
+      return;
+    }
 
-    if (diceNumber === 1) {
-      setActivePlayer((activePlayer) => (activePlayer === 1 ? 2 : 1));
+    const randomNumber = Math.floor(Math.random() * 6) + 1;
+    setDiceNumber(randomNumber);
+
+    if (randomNumber === 1) {
+      setActivePlayer((prevPlayer) => (prevPlayer === 1 ? 2 : 1));
       setCurrent(0);
     } else {
-      // setCurrent (current + diceNumber)
-      setCurrent((current) => current + diceNumber);
+      //Debido a que React trabaja de forma asíncrona, se utiliza randomNumber en lugar de diceNumber
+      setCurrent((prevCurrent) => prevCurrent + randomNumber);
     }
+  };
+
+  const isTerminado = () => {
+    if (score[0] >= 100 || score[1] >= 100) {
+      document.querySelector(".btn--hold").disabled = true;
+      document.querySelector(".btn--roll").disabled = true;
+      return true;
+    }
+    return false;
   };
 
   return (

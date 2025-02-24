@@ -1,7 +1,7 @@
 import "./App.css";
 function Player({ name, score, current, isActive }) {
   const classPlayer =
-    score > 10
+    score > 100
       ? "player player--winner"
       : isActive
         ? "player player--active"
