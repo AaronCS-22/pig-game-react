@@ -19,7 +19,18 @@ function App() {
   const [current, setCurrent] = useState(0);
   const [diceNumber, setDiceNumber] = useState(0);
 
+  //Si alguno de los jugadores llega a 100, se desactiva el botón Hold y Roll llamando a isTerminado
+  const isTerminado = () => {
+    if (score[0] >= 100 || score[1] >= 100) {
+      document.querySelector(".btn--hold").disabled = true;
+      document.querySelector(".btn--roll").disabled = true;
+      return true;
+    }
+    return false;
+  };
+
   const handleHold = () => {
+    //Prevención si el juego ha terminado
     if (isTerminado()) {
       return;
     }
@@ -33,39 +44,40 @@ function App() {
     setActivePlayer(activePlayer === 1 ? 2 : 1);
     setCurrent(0);
   };
+
+  //Al pulsar en el botón New game, resetear el juego
   const handleNewGame = () => {
+    //Reseteo de variables
     setActivePlayer(1);
     setScore([0, 0]);
     setCurrent(0);
     setDiceNumber(0);
+    //Reseteo de botones
     document.querySelector(".btn--hold").disabled = false;
     document.querySelector(".btn--roll").disabled = false;
   };
 
+  //Al pulsar en el botón Roll Dice, lanzar el dado
   const handleRollDice = () => {
+    //Prevención si el juego ha terminado
     if (isTerminado()) {
       return;
     }
 
+    //Lanzar el dado
     const randomNumber = Math.floor(Math.random() * 6) + 1;
     setDiceNumber(randomNumber);
 
+    //Si es uno, cambiamos de jugador
     if (randomNumber === 1) {
       setActivePlayer((prevPlayer) => (prevPlayer === 1 ? 2 : 1));
       setCurrent(0);
-    } else {
-      //Debido a que React trabaja de forma asíncrona, se utiliza randomNumber en lugar de diceNumber
+    }
+    //Si es distinto de uno, mostramos el dado
+    else {
+      //Debido a que React trabaja de forma asíncrona, se utiliza randomNumber en lugar de diceNumber para evitar errores de sincronización
       setCurrent((prevCurrent) => prevCurrent + randomNumber);
     }
-  };
-
-  const isTerminado = () => {
-    if (score[0] >= 100 || score[1] >= 100) {
-      document.querySelector(".btn--hold").disabled = true;
-      document.querySelector(".btn--roll").disabled = true;
-      return true;
-    }
-    return false;
   };
 
   return (

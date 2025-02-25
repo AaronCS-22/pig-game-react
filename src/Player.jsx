@@ -1,5 +1,7 @@
 import "./App.css";
 function Player({ name, score, current, isActive }) {
+
+  //Si el usuario gana, se le agrega la clase player--winner; si no, se le agrega la clase player o con active si es su turno
   const classPlayer =
     score > 100
       ? "player player--winner"
